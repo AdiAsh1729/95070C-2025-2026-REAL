@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 class PID {
     public:
         double error;
@@ -7,19 +9,21 @@ class PID {
         double ki;
         double kd;
         
-        double startIntegral; //when to start calculating integral
+        double startIntegral;
         double integral;
         double derivative;
         double previousError;
 
-        double deadband; //how far off you can be
-        double timeTaken; //how much time your PID has taken around the target
-        double timeGiven; //how much time you have allotted for the PID
-        double motorPower; //how much power your motor is at
-        double powerGiven; //at how much power you should stop spinning
+        double deadband;
+        double startTime;
+        double timeTaken;
+        double timeGiven;
+        double motorOutput;
+        double powerGiven;
 
-        PID(double error, double kp, double ki, double kd, double startIntegral, double integral, double derivative, double previousError, double deadband, double timeTaken, double timeGiven, double motorPower, double powerGiven);
+        PID(double error, double kp, double ki, double kd, double startIntegral, double integral, double derivative, double previousError, double deadband, double startTime, double timeTaken, double timeGiven, double motorOutput, double powerGiven);
 
-        bool settled(double error);
-        double output(double error);
+        bool settled();
+        bool ifCalculateTime();
+        double output();
 };

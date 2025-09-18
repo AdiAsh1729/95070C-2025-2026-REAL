@@ -1,4 +1,5 @@
 #pragma once
+
 #include "vex.h"
 using namespace vex;
 
@@ -18,8 +19,9 @@ extern motor Intake1;
 extern motor Intake2;
 extern motor_group Intake;
 
-extern digital_out MP;
-extern digital_out Park;
+extern digital_out Descore;
+extern digital_out Park1;
+extern digital_out Score;
 
 extern inertial Inertial;
 extern rotation Rotation;

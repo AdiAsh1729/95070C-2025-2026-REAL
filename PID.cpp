@@ -1,7 +1,6 @@
 #include "PID.h"
-#include <cmath>
 
-PID::PID(double error, double kp, double ki, double kd, double startIntegral, double integral, double derivative, double previousError, double deadband, double timeTaken, double timeGiven, double motorPower, double powerGiven):
+PID::PID(double error, double kp, double ki, double kd, double startIntegral, double integral, double derivative, double previousError, double deadband, double startTime, double timeTaken, double timeGiven, double motorOutput, double powerGiven):
     error(error),
     kp(kp),
     ki(ki),
@@ -11,14 +10,15 @@ PID::PID(double error, double kp, double ki, double kd, double startIntegral, do
     derivative(derivative),
     previousError(previousError),
     deadband(deadband),
+    startTime(startTime),
     timeTaken(timeTaken),
     timeGiven(timeGiven),
-    motorPower(motorPower),
+    motorOutput(motorOutput),
     powerGiven(powerGiven)
 {};
 
-bool PID::settled(double error) {
-    if(error < deadband || timeTaken > timeGiven || motorPower < powerGiven) {
+bool PID::settled() {
+    if(error < deadband || timeTaken > timeGiven || motorOutput < powerGiven) {
         return true;
     }
 
@@ -27,7 +27,17 @@ bool PID::settled(double error) {
     }
 };
 
-double PID::output(double error) {
+bool PID::ifCalculateTime() {
+    if(error < startTime) {
+        return true;
+    }
+
+    else {
+        return false;
+    }
+}
+
+double PID::output() {
     this->derivative = error - previousError;
     
     if(fabs(error) < startIntegral) {

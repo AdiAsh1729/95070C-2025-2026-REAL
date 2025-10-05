@@ -7,7 +7,7 @@
 using namespace vex;
 
 class Drivetrain {
-    public:
+    private:
         brain& Brain;
         motor_group& LeftDrive;
         motor_group& RightDrive;
@@ -16,8 +16,11 @@ class Drivetrain {
         double gearRatio;
         double wheelDiameter;
 
+    public:
         Drivetrain(brain& Brain, motor_group& LeftDrive, motor_group& RightDrive, inertial& Inertial, double gearRatio, double wheelDiameter);
 
         void driveDistance(double targetDistance);
         void turnToHeading(double targetHeading);
 };
+
+extern Drivetrain chassis;

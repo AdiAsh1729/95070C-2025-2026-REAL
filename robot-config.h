@@ -2,6 +2,8 @@
 
 #include "vex.h"
 using namespace vex;
+using signature = vision::signature;
+using code = vision::code;
 
 extern brain Brain;
 extern controller Controller;
@@ -20,10 +22,10 @@ extern motor Intake2;
 extern motor_group Intake;
 
 extern digital_out Descore;
-extern digital_out Park1;
-extern digital_out Score;
+extern digital_out Matchloader;
+extern digital_out MiddleGoal;
+extern digital_out Park;
 
 extern inertial Inertial;
-extern rotation Rotation;
 
 void vexcodeInit(void);

@@ -1,25 +1,27 @@
 #include "PID.h"
 
-PID::PID(double startError, double error, double kp, double ki, double kd, double startIntegral, double integral, double derivative, double previousError, double deadband/*, double startTime, double timeTaken, double timeGiven*/, double motorOutput/*, double powerGiven*/):
+PID::PID(double startError, double error, double kp, double ki, double kd, double ks, double startIntegral, double integral, double derivative, double previousError, double deadband, double previousMotorOutput, double motorOutput):
     startError(startError),
     error(error),
     kp(kp),
     ki(ki),
     kd(kd),
+    ks(ks),
     startIntegral(startIntegral),
     integral(integral),
     derivative(derivative),
     previousError(previousError),
     deadband(deadband),
-    //startTime(startTime),
-    //timeTaken(timeTaken),
-    //timeGiven(timeGiven),
-    motorOutput(motorOutput)//,
-    //powerGiven(powerGiven)
+    previousMotorOutput(previousMotorOutput),
+    motorOutput(motorOutput)
 {};
 
+void PID::print() {
+    std::cout << this->error << ", " << this->motorOutput << ", " << this->previousError << ", " << this->previousMotorOutput << std::endl;
+}
+
 bool PID::settled() {
-    if((std::abs(this->error) < deadband)/* || (timeTaken > timeGiven) || (motorOutput < powerGiven)*/) {
+    if((std::abs(this->error) < deadband)) { //checks if the absolute value of the error is less than the deadband: in other words, it checks if the robot is close enough
         return true;
     }
 
@@ -27,16 +29,6 @@ bool PID::settled() {
         return false;
     }
 };
-
-/*bool PID::ifCalculateTime() {
-    if(std::abs(error) < startTime) {
-        return true;
-    }
-
-    else {
-        return false;
-    }
-}*/
 
 double PID::output() {
     this->derivative = (this->error - this->previousError) * 50;
@@ -51,7 +43,23 @@ double PID::output() {
 
     this->previousError = this->error;
 
-    return this->error * this->kp + this->integral * this->ki + this->derivative * this->kd;
+    this->motorOutput = this->error * this->kp + this->integral * this->ki + this->derivative * this->kd + getSign(this->error) * this->ks;
 
-    wait(20, msec);
+    /*if(std::abs(this->motorOutput - this->previousMotorOutput) > pow(this->error/4, 2) && std::abs(this->motorOutput) < std::abs(this->previousMotorOutput)) {
+        this->motorOutput = this->previousMotorOutput - getSign(this->previousMotorOutput) * pow(this->error/4, 2);
+    }*/
+
+    /*if(getSign(this->previousMotorOutput) != getSign(this->motorOutput) && getSign(this->previousMotorOutput) != 0) {
+        this->motorOutput = 0;
+    }*/
+
+    this->previousMotorOutput = this->motorOutput;
+
+    if(std::abs(this->motorOutput) > 99.9) {
+        return getSign(this->motorOutput) * 99.9;
+    }
+
+    else {
+        return this->motorOutput;
+    }    
 };
